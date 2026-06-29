@@ -1,252 +1,176 @@
-# 📊 Luma Data Platform — Migração e Modernização de BI
+# 🏥 Projeto Clínico — Pipeline de Dados & Inteligência de Negócio
 
-## 🎯 Visão do Projeto
+Este projeto simula um ecossistema completo de dados para uma clínica, com foco em **engenharia de dados, automação de pipelines e geração de insights estratégicos** para tomada de decisão.
 
-A Luma Data Platform é uma iniciativa de modernização da arquitetura de dados da Clínica Luma, evoluindo de processos manuais baseados em planilhas para uma plataforma de dados estruturada em camadas (Medallion Architecture), com suporte a orquestração completa via Apache Airflow e integração com cloud analytics (BigQuery).
-
-O objetivo é garantir:
-- confiabilidade dos dados
-- rastreabilidade ponta a ponta
-- escalabilidade do pipeline
-- automação de processos de ETL
-- base sólida para analytics e futuras aplicações de Data Engineering
+Os dados utilizados são **fictícios, gerados para fins de portfólio (via Gemini)**.
 
 ---
 
-# 🧠 Arquitetura Atual (Híbrida e Orquestrada)
+# 🚀 Objetivo do Projeto
 
-O sistema opera em arquitetura híbrida entre **PostgreSQL local** e **BigQuery (cloud)**, com orquestração centralizada via **Apache Airflow**.
+Construir uma solução completa de dados capaz de:
 
-## 🔹 Pipeline Operacional (PostgreSQL)
-
-```text
-Fontes operacionais (ABA+ / Agilos / Excel)
-        ↓
-Ingestão via Python ETL
-        ↓
-Bronze Layer (raw ingestion)
-        ↓
-Silver Layer (data cleansing & standardization)
-        ↓
-Gold Layer (business-ready datasets)
-        ↓
-PostgreSQL (Luma Database)
-```
+- Integrar diferentes fontes de dados (Excel, CSV, XLSM)
+- Automatizar processos de ETL
+- Organizar dados em camadas estruturadas (Bronze, Silver, Gold)
+- Disponibilizar dados em um Data Warehouse escalável (BigQuery)
+- Criar dashboards analíticos para suporte à decisão (Looker Studio)
 
 ---
 
-## ☁️ Pipeline Analítico (BigQuery)
+# 🧠 Problema de Negócio Simulado
 
-```text
-PostgreSQL (Gold Layer)
-        ↓
-ETL de carga controlado (WRITE_TRUNCATE)
-        ↓
-BigQuery (Gold Dataset)
-        ↓
-Power BI / Analytics Layer
-```
+Clínicas enfrentam desafios como:
+
+- Falta de visibilidade sobre rentabilidade por convênio e paciente
+- Alto impacto financeiro causado por faltas de pacientes e profissionais
+- Dados espalhados em planilhas sem padronização
+- Dificuldade em medir eficiência operacional e financeira
 
 ---
 
-# 🏗️ Arquitetura Medalhão
+# 💡 Solução Proposta
 
-## 🟤 Bronze Layer (Raw Data)
+Foi desenvolvido um pipeline completo de dados com foco em:
 
-Camada responsável pela ingestão fiel dos dados de origem.
-
-**Características:**
-- dados brutos (sem transformação)
-- preservação do estado original
-- suporte a reprocessamento completo
-- rastreabilidade de origem
+- Automação de ingestão e transformação de dados
+- Padronização e limpeza em múltiplas camadas
+- Geração de indicadores estratégicos (KPIs)
+- Visualização de dados para suporte à decisão
 
 ---
 
-## ⚪ Silver Layer (Trusted Data)
+# 🏗️ Arquitetura do Projeto
 
-Camada de padronização e confiabilidade.
+## 🔹 Fontes de Dados
+- Arquivos Excel (.xlsx, .xlsm)
+- Arquivos CSV
 
-**Características:**
-- limpeza e normalização
-- tratamento de tipos de dados
-- padronização de chaves
-- preparação analítica intermediária
+## 🔹 Pipeline de Dados
+- Python (ETL customizado)
+- Apache Airflow (orquestração via Docker)
 
----
+## 🔹 Data Warehouse
+- Google BigQuery (camadas Bronze, Silver e Gold)
 
-## 🟡 Gold Layer (Business Layer)
-
-Camada analítica orientada ao negócio.
-
-**Características:**
-- KPIs e métricas executivas
-- snapshots de desempenho
-- datasets consumidos por BI
-- base para exportação ao BigQuery
+## 🔹 Visualização
+- Looker Studio (Dashboard de Gestão Estratégica)
 
 ---
 
-## ☁️ BigQuery Layer (Analytics Cloud)
+# 🧱 Arquitetura em Camadas (Medallion)
 
-Camada final de consumo analítico em cloud.
+## 🥉 Bronze (Raw Data)
+- Ingestão direta dos arquivos
+- Sem transformações
+- Dados brutos preservados
 
-**Características:**
-- carga FULL REFRESH via `WRITE_TRUNCATE`
-- sem uso de UPDATE/DELETE manual
-- reprocessamento completo por execução
-- integração com Power BI e futuras aplicações
+## 🥈 Silver (Tratamento)
+- Limpeza e padronização
+- Correção de tipos (datas, IDs, formatos)
+- Normalização de colunas
 
----
-
-# ⚙️ Estratégia de Carga de Dados
-
-## PostgreSQL
-
-- Bronze: ingestão bruta (reprocessável)
-- Silver: transformação determinística
-- Gold: snapshots analíticos
-
-## BigQuery
-
-- estratégia FULL REFRESH
-- controle via `WRITE_TRUNCATE`
-- ausência de upsert manual
-- fonte única: Gold layer
+## 🥇 Gold (Analytics)
+- KPIs de negócio
+- Views para análise estratégica
+- Base para dashboards
 
 ---
 
-# 🔄 Orquestração (Apache Airflow)
+# ⚙️ Orquestração
 
-O pipeline é totalmente orquestrado via Apache Airflow, com execução modular por camada.
+O pipeline é automatizado via **Apache Airflow (Docker)**:
 
-Além disso, foram realizados testes manuais independentes (scripts Python isolados) com o objetivo de validação e segurança antes da consolidação do fluxo automatizado.
-
-## DAGs principais
-
-- Bronze ingestion DAG
-- Silver transformation DAG
-- Gold aggregation DAG
-- Pipeline master (orquestração geral)
-
-## Execução manual (debug/testes)
-
-```bash
-python -m etl.orchestrator.pipeline_master
-```
-
-## Execução via Airflow
-
-Execução automatizada via DAGs agendadas no Airflow Scheduler e Workers.
+- Execução agendada de DAGs
+- Controle de dependências entre tarefas
+- Monitoramento de execução
+- Reprocessamento automático em caso de falhas
 
 ---
 
-# 📊 Observabilidade e Auditoria
+# 📦 Tecnologias Utilizadas
 
-O sistema possui rastreabilidade completa de execução.
-
-## Recursos implementados:
-- logs de execução por ETL
-- controle de linhas inseridas e rejeitadas
-- tempo de execução por processo
-- auditoria de pipelines
-
-## Schema de auditoria:
-
-```sql
-audit.etl_run_log
-```
+- Python (Pandas)
+- Apache Airflow
+- Docker
+- Google BigQuery
+- Looker Studio
+- Google Cloud Platform (GCP)
 
 ---
 
-# 🐳 Infraestrutura
+# 📊 Dashboard Analítico
 
-Ambiente containerizado com:
+📌 Projeto: **Projeto Clínico - Dashboard de Gestão Estratégica**
 
-- PostgreSQL (Docker)
-- Airflow (orquestração)
-- ETL Python runtime (Docker)
-- Docker Compose
-- volumes persistentes
-- suporte a execução local padronizada
+## Visões disponíveis:
 
----
+### 🧭 Executiva
+- Visão geral da clínica
+- KPIs de performance
 
-# 🛠️ Tecnologias
+### 📉 Faltas
+- Análise de faltas de pacientes e profissionais
+- Impacto financeiro
+- Ranking de ocorrências
 
-- Python (ETL core)
-- Apache Airflow (orquestração)
-- PostgreSQL (operational + staging)
-- BigQuery (cloud analytics layer)
-- Docker / Docker Compose
-- pandas
-- psycopg2
-- Google Cloud BigQuery Client
-- Power BI
-- Git / GitHub
+### ⚙️ Eficiência Operacional
+- Produtividade por profissional
+- Utilização de agenda
+- Indicadores de performance
 
----
-
-# 📁 Estrutura do Projeto
-
-```text
-etl/
- ├── bronze/         # ingestion layer
- ├── silver/         # transformation layer
- ├── gold/           # analytics layer
- ├── orchestrator/   # pipeline control
- └── utils/          # shared utilities
-
-sql/
- ├── bronze/
- ├── silver/
- ├── gold/
- └── audit/
-
-data/
-docker/
-logs/
-powerbi/
-docs/
-```
+### 💰 Financeiro
+- Rentabilidade por convênio
+- Lucro e prejuízo estimado
+- Perdas operacionais
 
 ---
 
-# 🚀 Roadmap Técnico
+# 📈 Insights Gerados
 
-## Concluído
-- [x] Arquitetura Medallion (Bronze/Silver/Gold)
-- [x] Pipeline ETL funcional em PostgreSQL
-- [x] Camada Gold operacional
-- [x] Integração com BigQuery
-- [x] Orquestração via Apache Airflow
-- [x] Estratégia de carga FULL REFRESH
-
-## Em evolução
-- [ ] Data Quality automatizado (tests e validações)
-- [ ] Incremental loads (MERGE strategy no BigQuery)
-- [ ] Monitoramento centralizado
-- [ ] Observabilidade avançada
-- [ ] Otimização de performance de DAGs
+- Identificação de convênios menos rentáveis
+- Profissionais com maior impacto em faltas
+- Pacientes com maior taxa de ausência
+- Estimativa de perdas financeiras por ineficiência operacional
 
 ---
 
-# 📌 Status Atual do Projeto
+# 🔄 Fluxo do Pipeline
 
-O sistema encontra-se em estágio funcional avançado, com arquitetura Medallion totalmente implementada e orquestrada via Apache Airflow.
-
-O pipeline suporta execução automatizada por DAGs, com validações manuais realizadas durante a fase de estabilização e testes.
-
-A camada analítica está integrada ao BigQuery com estratégia de carga FULL REFRESH, garantindo consistência e reprocessamento controlado entre ambientes.
+1. Ingestão de arquivos (Excel/CSV)
+2. Processamento Bronze (raw → BigQuery)
+3. Transformação Silver (limpeza e padronização)
+4. Criação de métricas Gold (KPIs)
+5. Consumo no Looker Studio
 
 ---
 
-# 💡 Nota de Arquitetura
+# 🎯 Resultados Esperados
 
-Este projeto adota uma abordagem moderna de engenharia de dados híbrida e orquestrada:
+- Redução de perdas financeiras invisíveis
+- Melhor tomada de decisão baseada em dados
+- Visibilidade completa da operação da clínica
+- Aumento de eficiência operacional
 
-- PostgreSQL como camada operacional e staging
-- BigQuery como camada analítica escalável
-- Airflow como orquestrador central do pipeline
-- ETL em Python com controle modular por camada
-- Estratégia de carga baseada em reprocessamento determinístico (FULL REFRESH)
+---
+
+# 🧪 Observação
+
+Este projeto é um **case de portfólio**, utilizando dados fictícios gerados para fins educacionais e demonstrativos.
+
+---
+
+# 👨‍💻 Autor
+
+Projeto desenvolvido por **Patrick Almeida**  
+Focado em Engenharia de Dados, BI e Cloud (GCP)
+
+---
+
+# 📌 Status
+
+✔ Pipeline funcional  
+✔ Orquestração com Airflow  
+✔ ETL em Python  
+✔ Data Warehouse no BigQuery  
+✔ Dashboard no Looker Studio
