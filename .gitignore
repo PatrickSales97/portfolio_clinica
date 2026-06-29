@@ -1,36 +1,47 @@
-# Credenciais
-application_default_credentials.json
-.config/gcloud/
-
-# Pastas do ambiente e logs
-__pycache__/
-.ipynb_checkpoints/
-.env
-data/
-venv/
-.venv/
-.pytest_cache/
-.airflow/
-
+# Python
 __pycache__/
 *.pyc
+.pytest_cache/
+
+# Environment
 .env
+.venv/
+venv/
 
-ml/
-logs/
+# GCP / Credenciais
+auth_config/
+.config/gcloud/
+*.json
+*.jsonl
+
+# Airflow
 airflow/logs/
-gcp_tests/
+airflow/plugins/__pycache__/
+airflow/dags/__pycache__/
 
+# Data (estrutura apenas)
+data/
+!data/.gitkeep
+
+# Logs
+logs/
+
+# Jupyter
 .ipynb_checkpoints/
+
+# IDE
 .vscode/
 
+# OS
+.DS_Store
+
+# Temp files
 *.tmp
 *.bak
+*.pid
+*.seed
+*.pid.lock
 
-data/backup/
-
-data/raw/
-
-*.xlsx
-*.xlsm
-*.csv
+# Optional data formats
+*.parquet
+*.pkl
