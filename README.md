@@ -163,7 +163,12 @@ Este projeto é um **case de portfólio**, utilizando dados fictícios gerados p
 # 👨‍💻 Autor
 
 Projeto desenvolvido por **Patrick Almeida**  
-Focado em Engenharia de Dados, BI e Cloud (GCP)
+Focado em Engenharia de Dados,BI e Cloud (GCP)
+
+---
+
+# 📈 Dashboard Data Studio (Looker Studio)
+https://datastudio.google.com/s/nTnRUD4O1r0
 
 ---
 
