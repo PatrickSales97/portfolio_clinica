@@ -1,0 +1,101 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_luma
+
+    environment:
+      POSTGRES_DB: Luma
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Luma@4862
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../sql/01_CreateTables.sql:/docker-entrypoint-initdb.d/01_CreateTables.sql
+
+  etl:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+
+    container_name: etl_luma
+
+    environment:
+      DOCKER_ENV: "true"
+
+    env_file:
+      - ../.env.docker
+
+    depends_on:
+      - postgres
+
+    command: python -m etl.orchestrator.pipeline_master
+
+  airflow-webserver:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.airflow
+
+    container_name: airflow_webserver
+
+    depends_on:
+      - postgres
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:Luma%404862@postgres:5432/Luma
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "luma_airflow"
+      DOCKER_ENV: "true"
+
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/gcloud/application_default_credentials.json
+
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ../airflow/logs:/opt/airflow/logs
+      - ../airflow/plugins:/opt/airflow/plugins
+      - ..:/opt/airflow/project
+
+      # NOVO
+      - ${APPDATA}/gcloud:/opt/gcloud
+
+    ports:
+      - "8080:8080"
+
+    command: webserver
+
+  airflow-scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.airflow
+
+    container_name: airflow_scheduler
+
+    depends_on:
+      - airflow-webserver
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:Luma%404862@postgres:5432/Luma
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "luma_airflow"
+      DOCKER_ENV: "true"
+
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/gcloud/application_default_credentials.json
+
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ../airflow/logs:/opt/airflow/logs
+      - ../airflow/plugins:/opt/airflow/plugins
+      - ..:/opt/airflow/project
+
+      # NOVO
+      - ${APPDATA}/gcloud:/opt/gcloud
+
+    command: scheduler
+
+volumes:
+  postgres_data:

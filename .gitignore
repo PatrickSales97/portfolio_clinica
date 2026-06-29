@@ -1,0 +1,36 @@
+# Credenciais
+application_default_credentials.json
+.config/gcloud/
+
+# Pastas do ambiente e logs
+__pycache__/
+.ipynb_checkpoints/
+.env
+data/
+venv/
+.venv/
+.pytest_cache/
+.airflow/
+
+__pycache__/
+*.pyc
+.env
+
+ml/
+logs/
+airflow/logs/
+gcp_tests/
+
+.ipynb_checkpoints/
+.vscode/
+
+*.tmp
+*.bak
+
+data/backup/
+
+data/raw/
+
+*.xlsx
+*.xlsm
+*.csv

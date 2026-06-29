@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  airflow:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.airflow
+
+    container_name: airflow_estudos
+
+    ports:
+      - "8081:8080"
+
+    volumes:
+      # Projeto
+      - .:/app
+
+      # DAGs
+      - ./airflow/dags:/opt/airflow/dags
+
+      # Dados
+      - ./data:/opt/airflow/data
+
+      # Credenciais do Google Cloud (ADC do Windows)
+      - C:/Users/lumai/AppData/Roaming/gcloud:/home/airflow/.config/gcloud:ro
+
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
+      PYTHONPATH: /app
+
+      CLOUDSDK_CONFIG: /home/airflow/.config/gcloud
+
+      GOOGLE_APPLICATION_CREDENTIALS: /home/airflow/.config/gcloud/application_default_credentials.json
+
+    command: standalone

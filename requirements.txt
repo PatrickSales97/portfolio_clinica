@@ -1,0 +1,11 @@
+pandas
+psycopg2-binary
+python-dotenv
+sqlalchemy
+openpyxl
+
+google-cloud-bigquery
+pyarrow
+db-dtypes
+google-auth
+google-auth-oauthlib
