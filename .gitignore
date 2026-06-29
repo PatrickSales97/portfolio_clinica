@@ -5,6 +5,8 @@ __pycache__/
 
 # Environment
 .env
+.env.local
+.env.docker
 .venv/
 venv/
 
@@ -45,3 +47,5 @@ logs/
 # Optional data formats
 *.parquet
 *.pkl
+*.txt
+*.yml
